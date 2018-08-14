@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  roles:
+    - datagov-deploy-apache2
+  tasks:
+    - name: assert apache is listening on port 80
+      command: curl --silent --fail http://localhost
