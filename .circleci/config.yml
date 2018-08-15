@@ -2,6 +2,7 @@ version: 2
 jobs:
   test-kitchen:
     machine: true
+    working_directory: ~/datagov-deploy-apache2
     steps:
       - checkout
       - restore_cache:
