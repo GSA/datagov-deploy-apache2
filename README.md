@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/gsa/datagov-deploy-apache2.svg?style=svg)](https://circleci.com/gh/gsa/datagov-deploy-apache2)
+
 # datagov-deploy-apache2
 
 This project is part of [datagov-deploy](https://github.com/GSA/datagov-deploy).
@@ -8,7 +10,8 @@ Ansible role to deploy apache2 suitable for serving python-powered websites with
 
 ## Prerequisites
 
-- Ruby 2.3+
+- [Ruby](https://www.ruby-lang.org/) 2.3+
+- [Docker](https://www.docker.com/)
 
 
 ## Usage
