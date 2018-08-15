@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/gsa/datagov-deploy-apache2.svg?style=svg)](https://circleci.com/gh/gsa/datagov-deploy-apache2)
+[![CircleCI](https://circleci.com/gh/GSA/datagov-deploy-apache2.svg?style=svg)](https://circleci.com/gh/GSA/datagov-deploy-apache2)
 
 # datagov-deploy-apache2
 
