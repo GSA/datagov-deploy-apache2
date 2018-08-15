@@ -8,6 +8,7 @@ provisioner:
   require_ansible_omnibus: false
   require_chef_for_busser: false
   ansible_extra_flags: <%= ENV['ANSIBLE_EXTRA_FLAGS'] %>
+  additional_copy_path: test/files
   #ansible_verbose: true
   #ansible_diff: true
   #ansible_verbosity: 2
@@ -32,3 +33,4 @@ platforms:
 
 suites:
   - name: default
+  - name: python
