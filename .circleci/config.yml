@@ -1,5 +1,12 @@
 version: 2
 jobs:
+  lint:
+    docker:
+      - image: particlekit/ansible-lint
+    steps:
+      - checkout
+      - run: make lint
+
   test-kitchen:
     machine: true
     working_directory: ~/datagov-deploy-apache2
