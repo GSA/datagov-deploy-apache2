@@ -45,6 +45,9 @@
     line: 'ServerSignature Off'
   notify: reload apache
 
+- name: Create /var/run/apache2 with correct umask on startup
+  copy: src=usr_lib_tmpfiles_d_apache2.conf dest=/usr/lib/tmpfiles.d/apache2.conf mode=0644 owner=root group=root
+
 - name: enable apache2 mod_wsgi config to use custom python
   template: src=etc/apache2/conf-enabled/wsgi-custom-python.conf.j2 dest=/etc/apache2/conf-enabled/wsgi-custom-python.conf mode=0644
   notify: reload apache
