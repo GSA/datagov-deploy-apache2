@@ -11,21 +11,25 @@
   notify: reload apache
 
 - name: Apache | Enable some required modules
-  action: command a2enmod rewrite headers remoteip
+  apache2_module: name={{ item }} state=present
+  with_items:
+    - rewrite
+    - headers
+    - remoteip
   notify: reload apache
   tags:
     - common
-    - skip_ansible_lint
 
 - name: Apache | Enable Web Application Firewall
-  action: command a2enmod security2
+  apache2_module: name={{ item }} state=present
+  with_items:
+    - security2
   notify: reload apache
   tags:
     - web_application_firewall
     - CM-7
     - SC-7
     - SI-10
-    - skip_ansible_lint
 
 - name: Configure mod_remoteip
   template: src=templates/etc/apache2/conf-enabled/mod_remoteip.conf dest=/etc/apache2/conf-enabled/mod_remoteip.conf mode=0644
