@@ -22,6 +22,10 @@ and enable them with `a2ensite`.
 
 ### Variables
 
+**`apache2_ssl_versions`** array<string> (default: `["TLSv1.1", "TLSv1.2"]`)
+
+SSL versions to support for mod_ssl.
+
 **`python_home`** (default: `/usr`)
 
 The prefix path to where python is installed. If you installed your own version
