@@ -31,7 +31,6 @@ virtualenv.
 
 ## Prerequisites for development
 
-- [Ruby](https://www.ruby-lang.org/) 2.3+
 - [Docker](https://www.docker.com/)
 - [Python](https://www.python.org/) 2.7 or 3.5+ in a virtualenv
 
@@ -46,7 +45,6 @@ Run the tests.
 
     $ make test
 
-You can debug the container after it runs. See `kitchen help` for additional
-commands.
-
-    $ bundle exec kitchen login
+For more information on how to use
+[Molecule](https://molecule.readthedocs.io/en/latest/) for development, see [our
+wiki](https://github.com/GSA/datagov-deploy/wiki/Developing-Ansible-roles-with-Molecule).
