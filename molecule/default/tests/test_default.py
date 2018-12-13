@@ -30,3 +30,10 @@ def test_ports(host):
     http = host.socket('tcp://80')
 
     assert http.is_listening
+
+
+def test_ssl_versions(host):
+    mod_ssl = host.file('/etc/apache2/mods-enabled/ssl.conf')
+
+    assert mod_ssl.exists
+    assert mod_ssl.contains('SSLProtocol TLSv1.1 TLSv1.2')

@@ -1,21 +1,23 @@
 ---
 - name: make sure packages are installed
-  apt: pkg={{item}} state=installed
+  apt: pkg={{item}} state=present
   with_items:
     - apache2
     - libapache2-mod-wsgi
     - libapache2-modsecurity
+  notify: restart apache
 
-- name: default apache removed
+- name: default apache site removed
   action: file path=/etc/apache2/sites-enabled/000-default.conf state=absent
   notify: reload apache
 
 - name: Apache | Enable some required modules
   apache2_module: name={{ item }} state=present
   with_items:
-    - rewrite
     - headers
     - remoteip
+    - rewrite
+    - ssl
   notify: reload apache
   tags:
     - common
@@ -47,6 +49,13 @@
     dest: /etc/apache2/conf-enabled/security.conf
     regexp: '^ServerSignature '
     line: 'ServerSignature Off'
+  notify: reload apache
+
+- name: Enable specific versions of SSL
+  lineinfile:
+    dest: /etc/apache2/mods-enabled/ssl.conf
+    regexp: 'SSLProtocol '
+    line: SSLProtocol {{ apache2_ssl_versions | join(' ') }}
   notify: reload apache
 
 - name: Create /var/run/apache2 with correct umask on startup
