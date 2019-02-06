@@ -58,6 +58,13 @@
     line: SSLProtocol {{ apache2_ssl_versions | join(' ') }}
   notify: reload apache
 
+- name: Enable only strong SSL ciphers
+  lineinfile:
+    dest: /etc/apache2/mods-enabled/ssl.conf
+    regexp: 'SSLCipherSuite '
+    line: SSLCipherSuite {{ apache2_ssl_ciphers }}
+  notify: reload apache
+
 - name: Create /var/run/apache2 with correct umask on startup
   copy: src=usr_lib_tmpfiles_d_apache2.conf dest=/usr/lib/tmpfiles.d/apache2.conf mode=0644 owner=root group=root
 
