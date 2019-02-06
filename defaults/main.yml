@@ -1,4 +1,7 @@
 ---
+# Configure /var/www with -Indexes
+apache2_disable_var_www_indexes: true
+
 # Versions of SSL to support
 apache2_ssl_versions:
   - TLSv1.1
