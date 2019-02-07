@@ -37,6 +37,14 @@
   template: src=templates/etc/apache2/conf-enabled/mod_remoteip.conf dest=/etc/apache2/conf-enabled/mod_remoteip.conf mode=0644
   notify: reload apache
 
+- name: Disable /var/www
+  template: >-
+    src=templates/etc/apache2/conf-enabled/disable-var-www-indexes.conf
+    dest=/etc/apache2/conf-enabled/disable-var-www-indexes.conf
+    mode=0644
+  when: apache2_disable_var_www_indexes
+  notify: reload apache
+
 - name: Apache ServerTokens Prod
   lineinfile:
     dest: /etc/apache2/conf-enabled/security.conf
