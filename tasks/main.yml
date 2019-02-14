@@ -59,6 +59,20 @@
     line: 'ServerSignature Off'
   notify: reload apache
 
+- name: Configure TLS/SSL certificate
+  lineinfile:
+    dest: /etc/apache2/mods-enabled/ssl.conf
+    regexp: '^SSLCertificateFile'
+    line: SSLCertificateFile {{ apache2_ssl_certificate_file }}
+  when: apache2_ssl_certificate_file is defined
+
+- name: Configure TLS/SSL certificate key
+  lineinfile:
+    dest: /etc/apache2/mods-enabled/ssl.conf
+    regexp: '^SSLCertificateKeyFile'
+    line: SSLCertificateKeyFile {{ apache2_ssl_certificate_key_file }}
+  when: apache2_ssl_certificate_key_file is defined
+
 - name: Enable specific versions of SSL
   lineinfile:
     dest: /etc/apache2/mods-enabled/ssl.conf
