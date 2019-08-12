@@ -16,6 +16,7 @@
   apache2_module: name={{ item }} state=present
   with_items:
     - headers
+    - proxy
     - remoteip
     - rewrite
     - ssl
