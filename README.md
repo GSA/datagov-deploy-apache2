@@ -48,22 +48,23 @@ virtualenv.
 ## Prerequisites for development
 
 - [Docker](https://www.docker.com/)
-- [Python](https://www.python.org/) 2.7 or 3.5+ in a virtualenv
+- [Python](https://www.python.org/) 3.6+
+- [pipenv](https://docs.pipenv.org/en/latest/)
 
 
 ## Development
 
 Install dependencies.
 
-    $ make setup
+    $ pipenv install --dev
 
 Run the tests.
 
-    $ make test
+    $ pipenv run molecule test --all
 
 To run the ssl scenario playbook with molecule.
 
-    $ molecule converge -s ssl
+    $ pipenv run molecule converge -s ssl
 
 For more information on how to use
 [Molecule](https://molecule.readthedocs.io/en/latest/) for development, see [our
