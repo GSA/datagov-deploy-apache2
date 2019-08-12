@@ -3,30 +3,27 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:2.7
+      - image: circleci/python:3.6
     working_directory: ~/datagov-deploy-apache2
+    environment:
+      PIPENV_VENV_IN_PROJECT: 1
     steps:
       - setup_remote_docker
       - checkout
       - restore_cache:
           keys:
-            - v1-venv-{{ checksum "requirements.txt" }}
-            - v1-venv-
+            - v1-pipfile-{{ checksum "Pipfile.lock" }}
+            - v1-pipfile-
       - run:
           name: Install dependencies
-          command: |
-            virtualenv venv
-            source venv/bin/activate
-            pip install -r requirements.txt
+          command: pipenv sync --dev
       - save_cache:
-          key: v1-venv-{{ checksum "requirements.txt" }}
+          key: v1-pipfile-{{ checksum "Pipfile.lock" }}
           paths:
-            - venv
+            - .venv
       - run:
           name: Run tests
-          command: |
-            source venv/bin/activate
-            make test
+          command: pipenv run molecule test --all
 
 workflows:
   version: 2
