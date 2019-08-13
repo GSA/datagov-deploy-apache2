@@ -25,8 +25,28 @@ jobs:
           name: Run tests
           command: pipenv run molecule test --all
 
+  snyk:
+    docker:
+      - image: circleci/python:3.6-node
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-pipfile-{{ checksum "Pipfile.lock" }}
+            - v1-pipfile-
+      - run:
+          name: Install dependencies
+          command: pipenv sync --dev
+      - save_cache:
+          key: v1-pipfile-{{ checksum "Pipfile.lock" }}
+          paths:
+            - .venv
+      - run: sudo npm install -g snyk
+      - run: snyk test
+
 workflows:
   version: 2
   commit:
     jobs:
+      - snyk
       - build
