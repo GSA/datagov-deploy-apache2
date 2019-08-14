@@ -17,6 +17,7 @@
   with_items:
     - headers
     - proxy
+    - proxy_http
     - remoteip
     - rewrite
     - ssl
