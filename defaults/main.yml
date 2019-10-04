@@ -1,4 +1,6 @@
 ---
+apache2_enabled: true
+
 # Configure /var/www with -Indexes
 apache2_disable_var_www_indexes: true
 

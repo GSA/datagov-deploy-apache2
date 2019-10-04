@@ -3,8 +3,10 @@
   service:
     name: apache2
     state: reloaded
+  when: apache2_enabled
 
 - name: restart apache
   service:
     name: apache2
     state: restarted
+  when: apache2_enabled
