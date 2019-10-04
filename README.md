@@ -22,23 +22,33 @@ and enable them with `a2ensite`.
 
 ### Variables
 
-**`apache2_ssl_certificate_file`** string (default: none)
+
+#### `apache2_enabled` boolean (default: true)
+
+Ensure the apache2 service is started and enabled.
+
+
+#### `apache2_ssl_certificate_file` string (default: none)
 
 File path to the TLS/SSL certificate file.
 
-**`apache2_ssl_certificate_key_file`** string (default: none)
+
+#### `apache2_ssl_certificate_key_file` string (default: none)
 
 File path to the TLS/SSL certificate key file.
 
-**`apache2_ssl_ciphers`** string (default: `HIGH:!aNULL:!MD5`)
+
+#### `apache2_ssl_ciphers` string (default: `HIGH:!aNULL:!MD5`)
 
 SSL cipher string to support for mod_ssl.
 
-**`apache2_ssl_versions`** array<string> (default: `["TLSv1.1", "TLSv1.2"]`)
+
+#### `apache2_ssl_versions` array<string> (default: `["TLSv1.1", "TLSv1.2"]`)
 
 SSL versions to support for mod_ssl.
 
-**`python_home`** (default: `/usr`)
+
+#### `python_home` (default: `/usr`)
 
 The prefix path to where python is installed. If you installed your own version
 of python, you might want to specify `/usr/local` or the path to your
@@ -62,7 +72,7 @@ Run the tests.
 
     $ pipenv run molecule test --all
 
-To run the ssl scenario playbook with molecule.
+Run a scenario playbook with molecule e.g. ssl.
 
     $ pipenv run molecule converge -s ssl
 
