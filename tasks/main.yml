@@ -26,10 +26,37 @@
     - common
 
 - name: Apache | Enable Web Application Firewall
-  apache2_module: name={{ item }} state=present
+  apache2_module: name={{ item }} state=latest
   with_items:
     - security2
   notify: reload apache
+
+- name: Rename ModSecurity
+  template: >-
+    src=/etc/modsecurity/modsecurity.conf-recommended
+    dest=/etc/modsecurity/modsecurity.conf
+  notify: reload apache
+
+- name: Change detection mode
+  lineinfile:
+    dest: /etc/modsecurity/modsecurity.conf
+    regexp: 'SecRuleEngine = DetectionOnly'
+    line: 'SecRuleEngine = on'
+  notify: reload apache
+
+- name: Configure modsecurity.config
+  template: >-
+    src=templates/etc/apache2/conf-enabled/crs-setup.conf.example
+    dest=/etc/modsecurity/modsecurity.conf
+  notify: reload apache
+
+- name: Copy rules
+  template: >-
+    src=templates/etc/apache2/conf-enabled/rules
+    dest=/etc/modsecurity
+  notify: reload apache
+
+
 
 - name: Configure mod_remoteip
   template: src=templates/etc/apache2/conf-enabled/mod_remoteip.conf dest=/etc/apache2/conf-enabled/mod_remoteip.conf mode=0644
