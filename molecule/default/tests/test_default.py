@@ -46,6 +46,16 @@ def test_www(host):
     assert uri['status'] == 200
 
 
+def test_security(host):
+    uri = host.ansible(
+        'uri',
+        'url="http://localhost/?%0d%0atester=testing"',
+        check=False
+    )
+
+    assert uri['status'] == 403
+
+
 def test_no_indexes(host):
     # Test we don't get an Indexes/MultiView from http://localhost:443
     # TODO we should set up the role to assume redirect http -> https which

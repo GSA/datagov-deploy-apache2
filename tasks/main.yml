@@ -6,6 +6,7 @@
       - apache2
       - libapache2-mod-wsgi
       - libapache2-mod-security2
+      - git-all
   notify: restart apache
 
 - name: default apache site removed
@@ -21,42 +22,77 @@
     - remoteip
     - rewrite
     - ssl
+    - security2
   notify: reload apache
   tags:
     - common
 
-- name: Apache | Enable Web Application Firewall
-  apache2_module: name={{ item }} state=latest
-  with_items:
-    - security2
-  notify: reload apache
-
 - name: Rename ModSecurity
-  template: >-
-    src=/etc/modsecurity/modsecurity.conf-recommended
-    dest=/etc/modsecurity/modsecurity.conf
-  notify: reload apache
+  copy:
+    src: /etc/modsecurity/modsecurity.conf-recommended
+    dest: /etc/modsecurity/modsecurity.conf
+    remote_src: yes
 
 - name: Change detection mode
   lineinfile:
     dest: /etc/modsecurity/modsecurity.conf
     regexp: 'SecRuleEngine = DetectionOnly'
-    line: 'SecRuleEngine = on'
-  notify: reload apache
+    line: 'SecRuleEngine on'
+  notify: restart apache
 
-- name: Configure modsecurity.config
-  template: >-
-    src=templates/etc/apache2/conf-enabled/crs-setup.conf.example
-    dest=/etc/modsecurity/modsecurity.conf
-  notify: reload apache
+- name: enable apache2
+  service:
+    name: apache2
+    enabled: "{{ apache2_enabled }}"
+    state: "restarted"
 
-- name: Copy rules
-  template: >-
-    src=templates/etc/apache2/conf-enabled/rules
-    dest=/etc/modsecurity
-  notify: reload apache
+- name: Pull new rules
+  git:
+    repo: 'https://github.com/SpiderLabs/owasp-modsecurity-crs.git'
+    dest: "/tmp/owasp-modsecurity-crs/"
+    version: "v3.0/master"
 
+- name: Copy new configuration
+  copy:
+    src: /tmp/owasp-modsecurity-crs/crs-setup.conf.example
+    dest: /etc/modsecurity/crs-setup.conf
+    owner: root
+    group: root
+    remote_src: yes
 
+- name: Sync new rules
+  command: "mv -f /tmp/owasp-modsecurity-crs/rules /etc/modsecurity/rules"
+  register: command_result
+  changed_when: "command_result.stdout != 'mv: cannot stat *: No such file or directory'"
+
+- name: Remove rule file 1
+  file:
+    state: absent
+    path: "/etc/modsecurity/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"
+
+- name: Remove rule file 2
+  file:
+    state: absent
+    path: "/etc/modsecurity/rules/REQUEST-903.9004-DOKUWIKI-EXCLUSION-RULES.conf"
+
+- name: Remove rule file 3
+  file:
+    state: absent
+    path: "/etc/modsecurity/rules/RESPONSE-950-DATA-LEAKAGES.conf"
+
+- name: Configure security
+  lineinfile:
+    dest: /etc/apache2/mods-enabled/security2.conf
+    regexp: '/etc/modsecurity/*.conf'
+    line: 'IncludeOptional /etc/modsecurity/rules/*.conf
+        IncludeOptional /etc/modsecurity/*.conf'
+  notify: restart apache
+
+- name: enable apache2
+  service:
+    name: apache2
+    enabled: "{{ apache2_enabled }}"
+    state: "restarted"
 
 - name: Configure mod_remoteip
   template: src=templates/etc/apache2/conf-enabled/mod_remoteip.conf dest=/etc/apache2/conf-enabled/mod_remoteip.conf mode=0644
