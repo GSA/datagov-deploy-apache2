@@ -57,6 +57,16 @@ def test_no_indexes(host):
     assert uri['status'] in [403, 404]
 
 
+def test_custom_log_format(host):
+    conf = host.file('/etc/apache2/conf-enabled/custom-log-format.conf')
+
+    assert conf.exists
+    assert conf.user == 'root'
+    assert conf.group == 'root'
+    assert conf.mode == 0o644
+    assert conf.contains('%a')
+
+
 def test_ssl_versions(host):
     mod_ssl = host.file('/etc/apache2/mods-enabled/ssl.conf')
 
